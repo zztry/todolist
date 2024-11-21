@@ -25,4 +25,15 @@ public class UserController {
         return false;
     }
 
+    /**
+     * 用户注册
+     * @param username
+     * @param password
+     * @return
+     */
+    public static boolean userRegister(String username,String password){
+        //TODO
+        return false;
+    }
+
 }
