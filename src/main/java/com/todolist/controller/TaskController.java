@@ -13,6 +13,7 @@ import com.todolist.entity.TaskTag;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,22 +70,59 @@ public class TaskController {
             taskTag.setUser_id(UserSession.getInstance().getCurrentUser().getId());
             TaskTagDao.insert(taskTag);
         }
-        //插入task_schedule表
-        TaskSchedule taskSchedule = new TaskSchedule();
-        taskSchedule.setTaskId(taskId);
-        taskSchedule.setUserId(UserSession.getInstance().getCurrentUser().getId());
-        //start time
+        //插入task_schedule表 ，如果是重复任务，重复插入多个
+        int userId = UserSession.getInstance().getCurrentUser().getId();
         LocalDate startDate = task.getStartDate();
-        LocalTime startTime = task.getStartTime();
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        taskSchedule.setStartTime(startDateTime);
-        //end time
         LocalDate endDate = task.getEndDate();
+        LocalTime startTime = task.getStartTime();
         LocalTime endTime = task.getEndTime();
-        LocalDateTime endDateTime = LocalDateTime.of(endDate,endTime);
-        taskSchedule.setEndTime(endDateTime);
+        int repeatType = task.getRepeatType();
+        int repeatInterval = task.getRepeatInterval();
+        int repeatNum = task.getRepeatNum();
 
-        TaskScheduleDao.insert(taskSchedule);
+        List<LocalDateTime> startDateTimes = generateScheduleDates(startDate, endDate, repeatType, repeatInterval, repeatNum);
+        for (LocalDateTime startDateTime : startDateTimes) {
+            TaskSchedule taskSchedule = new TaskSchedule();
+            taskSchedule.setTaskId(taskId);
+            taskSchedule.setUserId(userId);
+            taskSchedule.setStartTime(startDateTime);
+            taskSchedule.setEndTime(startDateTime.plusHours(endTime.getHour() - startTime.getHour())
+                    .plusMinutes(endTime.getMinute() - startTime.getMinute()));
+            TaskScheduleDao.insert(taskSchedule);
+        }
 
     }
+
+    /**
+     * 寻找当前的全部任务
+     * @return
+     */
+    public static List<Task> selectTodayTask(){
+        List<Task> tasks = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        List<TaskSchedule> todayTaskSchedules = TaskScheduleDao.taskInDate(today);
+
+        for (TaskSchedule schedule : todayTaskSchedules) {
+            Task task = TaskDao.getTaskById(schedule.getTaskId());
+            if (task != null) {
+                tasks.add(task);
+            }
+        }
+
+        return tasks;
+
+    }
+
+    private static List<LocalDateTime> generateScheduleDates(LocalDate startDate, LocalDate endDate, int repeatType, int repeatInterval, int repeatNum) {
+        List<LocalDateTime> dates = new ArrayList<>();
+        LocalDate current = startDate;
+        while (!current.isAfter(endDate) && repeatNum > 0) {
+            LocalDateTime startDateTime = current.atStartOfDay();
+            dates.add(startDateTime);
+            current = current.plus(repeatInterval, ChronoUnit.DAYS);
+            repeatNum--;
+        }
+        return dates;
+    }
+
 }

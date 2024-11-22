@@ -2,7 +2,7 @@ package com.todolist.config;
 
 import com.todolist.entity.User;
 
-//单例模式构造用户session类
+//单例模式构造用户session类，获取当前已登录的用户信息
 public class UserSession {
 
     private static UserSession instance;

@@ -11,7 +11,10 @@ public class Tag {
     private int id;
     private String name;
     private String description;
-    private int priority;
     private int colorCode;
     private int user_id;
+
+    public String toString2(){
+        return "tag [name=" + name + ", description=" + description + "]";
+    }
 }
