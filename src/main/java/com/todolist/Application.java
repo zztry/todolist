@@ -11,6 +11,10 @@ import com.todolist.gui.MainFrame;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,6 +61,58 @@ public class Application {
                 }
                 else if(func==2){
                     System.out.println("请输入任务并选择tag");
+
+                    List<Tag> list = TagController.list();
+                    System.out.println("该用户tag有");
+                    for (Tag tag : list) {
+                        System.out.println(tag.toString2());
+                    }
+
+                    System.out.println("请输入任务设置");
+
+                    System.out.println("任务名:");
+                    String title = scanner.nextLine();
+
+                    System.out.println("任务描述:");
+                    String description = scanner.nextLine();
+
+                    System.out.println("开始日期 (格式：yyyy-MM-dd):");
+                    LocalDate startDate = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                    System.out.println("结束日期 (格式：yyyy-MM-dd):");
+                    LocalDate endDate = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                    System.out.println("开始时间 (格式：HH:mm):");
+                    LocalTime startTime = LocalTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+
+                    System.out.println("结束时间 (格式：HH:mm):");
+                    LocalTime endTime = LocalTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+
+                    System.out.println("任务优先级 (1-3):");
+                    int priority = Integer.parseInt(scanner.nextLine());
+
+                    System.out.println("任务是否重复 (0-不重复, 1-重复):");
+                    int repeatType = Integer.parseInt(scanner.nextLine());
+
+                    System.out.println("重复间隔天数:");
+                    int repeatInterval = Integer.parseInt(scanner.nextLine());
+
+                    System.out.println("重复次数:");
+                    int repeatNum = Integer.parseInt(scanner.nextLine());
+
+                    System.out.println("请输入标签id，输入-1时停止");
+                    int tagId = 0;
+                    List<Integer> tagsId = new ArrayList<>();
+                    while(tagId!=-1){
+                        tagId = scanner.nextInt();
+                        if(tagId!=-1){
+                            tagsId.add(tagId);
+                        }
+                        scanner.nextLine();
+                    }
+
+
+                    TaskController.addTask(title, description, startDate, endDate, startTime, endTime, priority, repeatType, repeatInterval, repeatNum, tagsId);
 
                 }
                 else if(func == 3){

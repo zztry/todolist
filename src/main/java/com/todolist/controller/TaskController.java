@@ -24,7 +24,7 @@ public class TaskController {
      */
     public static void addTask(String title, String description, LocalDate startDate, LocalDate endDate,
                                LocalTime startTime, LocalTime endTime, int priority, int repeatType,
-                               int repeatInterval, int repeatNum, List<String> tagsName) {
+                               int repeatInterval, int repeatNum, List<Integer> tagsId) {
         // 创建任务对象
         Task task = new Task();
         task.setTitle(title);
@@ -39,16 +39,7 @@ public class TaskController {
         task.setRepeatNum(repeatNum);
         task.setUserId(UserSession.getInstance().getCurrentUser().getId());
 
-        // 获取标签ID列表
-        List<Integer> tagsId = new ArrayList<>();
-        for (String tName : tagsName) {
-            int id = TaskDao.getIdByName(tName);
-            if(id==-1){
-                System.out.println("当前tag不存在："+tName);
-                continue;
-            }
-            tagsId.add(id);
-        }
+
 
         // 插入任务和标签
         insert(task, tagsId);

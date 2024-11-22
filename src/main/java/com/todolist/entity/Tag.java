@@ -15,6 +15,6 @@ public class Tag {
     private int user_id;
 
     public String toString2(){
-        return "tag [name=" + name + ", description=" + description + "]";
+        return "tag [id=" + id+ " name=" + name + ", description=" + description + "]";
     }
 }

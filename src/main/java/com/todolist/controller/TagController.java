@@ -31,4 +31,8 @@ public class TagController {
         return tags;
     }
 
+    public static Tag findById(int id){
+        return TagDao.findById(id);
+    }
+
 }

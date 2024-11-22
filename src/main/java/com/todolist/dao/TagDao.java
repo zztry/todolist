@@ -61,6 +61,30 @@ public class TagDao {
     }
 
     /**
+     * 根据标签ID查找标签
+     *
+     * @param tagId 标签ID
+     * @return 标签对象，如果没有找到则返回null
+     */
+    public static Tag findById(int tagId) {
+        Tag tag = null;
+        String sql = "SELECT * FROM tag WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, tagId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    tag = mapRowToTag(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tag;
+    }
+
+
+    /**
      * 将结果集的一行映射为Tag对象
      * @param rs 结果集
      * @return Tag对象
