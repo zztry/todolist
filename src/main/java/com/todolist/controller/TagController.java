@@ -31,8 +31,31 @@ public class TagController {
         return tags;
     }
 
+    /**
+     * 根据id查找tag
+     * @param id
+     * @return
+     */
     public static Tag findById(int id){
         return TagDao.findById(id);
+    }
+
+    /**
+     * 删除tag
+     * @param id
+     */
+    public static void deleteTag(int id){
+        //TODO
+    }
+
+    /**
+     * 修改tag
+     * @param id
+     * @param name
+     * @param description
+     */
+    public static void updateTag(int id,String name,String description){
+        //TODO
     }
 
 }

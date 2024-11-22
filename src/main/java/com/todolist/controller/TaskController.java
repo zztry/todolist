@@ -104,6 +104,15 @@ public class TaskController {
 
     }
 
+    /**
+     * 查找某个时间段的任务
+     * @param startDate
+     * @param endDate
+     * @param repeatType
+     * @param repeatInterval
+     * @param repeatNum
+     * @return
+     */
     private static List<LocalDateTime> generateScheduleDates(LocalDate startDate, LocalDate endDate, int repeatType, int repeatInterval, int repeatNum) {
         List<LocalDateTime> dates = new ArrayList<>();
         LocalDate current = startDate;
